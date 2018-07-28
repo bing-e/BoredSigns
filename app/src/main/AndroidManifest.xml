@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.zacharee1.boredsigns">
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher_boredsigns"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ConfigActivity"
+            android:exported="true" />
+        <activity
+            android:name=".proxies.InfoProxy"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".proxies.ImageProxy"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".proxies.WeatherProxy"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".proxies.NavProxy"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.PermissionsActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:theme="@style/AppTheme.Null" />
+        <activity
+            android:name=".activities.ImagePickerActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:exported="true"
+            android:theme="@style/Base.Theme.AppCompat" />
+        <activity
+            android:name=".activities.LocationPickerActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme.Null" />
+        <activity
+            android:name=".activities.AODActivity"
+            android:exported="true"
+            android:label="@string/aod_editor" />
+        <activity
+            android:name=".activities.NavBarConfigureActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.NotSupportedActivity"
+            android:theme="@style/AppTheme.Null" />
+
+        <receiver
+            android:name=".widgets.InfoWidget"
+            android:label="@string/info_widget_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.zacharee1.boredsigns.action.UPDATE_INFO" />
+                <action android:name="android.intent.action.TIME_TICK" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/info_widget_info" />
+            <meta-data
+                android:name="com.lge.signboard.widget.description"
+                android:value="tap_to_configure" />
+        </receiver>
+        <receiver
+            android:name=".widgets.ImageWidget"
+            android:label="@string/image_widget_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.zacharee1.boredsigns.action.UPDATE_INFO" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/image_widget_info" />
+            <meta-data
+                android:name="com.lge.signboard.widget.description"
+                android:value="tap_to_configure" />
+        </receiver>
+        <receiver
+            android:name=".widgets.WeatherWidget"
+            android:label="@string/weather_widget_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/weather_widget_info" />
+            <meta-data
+                android:name="com.lge.signboard.widget.description"
+                android:value="tap_to_configure" />
+        </receiver>
+        <receiver
+            android:name=".widgets.WeatherForecastWidget"
+            android:label="@string/weather_forecast_widget_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/weather_forecast_widget_info" />
+            <meta-data
+                android:name="com.lge.signboard.widget.description"
+                android:value="tap_to_configure" />
+        </receiver>
+        <receiver
+            android:name=".widgets.NavBarWidget"
+            android:label="@string/navbar_widget_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/navbar_widget_info" />
+            <meta-data
+                android:name="com.lge.signboard.widget.description"
+                android:value="tap_to_configure" />
+        </receiver>
+        <receiver
+            android:name=".widgets.Dev1Widget"
+            android:label="@string/dev_widget_1_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/dev1_widget_info" />
+            <meta-data
+                android:name="com.lge.signboard.widget.description"
+                android:value="dev_widget_1_desc" />
+        </receiver>
+        <receiver
+            android:name=".widgets.Dev2Widget"
+            android:label="@string/dev_widget_2_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/dev2_widget_info" />
+            <meta-data
+                android:name="com.lge.signboard.widget.description"
+                android:value="dev_widget_2_desc" />
+        </receiver>
+        <receiver
+            android:name=".widgets.CPUInfoWidget"
+            android:label="@string/cpu_widget_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/cpu_widget_info" />
+            <meta-data
+                android:name="com.lge.signboard.widget.description"
+                android:value="cpu_widget_desc" />
+        </receiver>
+        <receiver
+            android:name=".widgets.RingerVolumeWidget"
+            android:label="@string/ringer_widget_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/volume_widget_info" />
+        </receiver>
+        <receiver
+            android:name=".widgets.MediaVolumeWidget"
+            android:label="@string/media_widget_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/volume_widget_info" />
+        </receiver>
+        <receiver
+            android:name=".receivers.BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".services.InfoService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".services.WeatherService"
+            android:exported="false" />
+        <service
+            android:name=".services.NavBarAccessibility"
+            android:description="@string/accessibility_service"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".services.Dev1Service"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".services.Dev2Service"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".services.CPUInfoService"
+            android:enabled="true"
+            android:exported="true" />
+        <service android:name=".services.FirebaseService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCo0GdKgs-Bp0QKcHcM3nQyj7LPyEe82mE" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_launcher_boredsigns" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+
+        <service
+            android:name=".services.VolumeService"
+            android:enabled="true"
+            android:exported="true"></service>
+    </application>
+
+</manifest>

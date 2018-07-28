@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:title="@string/use_celsius"
+        android:key="weather_unit"
+        android:defaultValue="true" />
+
+    <SwitchPreference
+        android:title="@string/use_current_location"
+        android:key="use_location"
+        android:defaultValue="true" />
+
+    <Preference
+        android:title="@string/pick_location"
+        android:key="manual_location"
+        android:enabled="false"
+        android:widgetLayout="@layout/google_attr"/>
+
+    <Preference
+        android:enabled="false"
+        android:selectable="false" />
+
+    <Preference
+        android:summary="@string/weather_icon_attr">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="http://erikflowers.github.io/weather-icons/" />
+    </Preference>
+
+</PreferenceScreen>
