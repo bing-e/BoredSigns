@@ -6,8 +6,8 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Handler
 import android.support.v4.content.LocalBroadcastManager
 import android.view.View
 import android.widget.RemoteViews
@@ -19,9 +19,7 @@ import com.zacharee1.boredsigns.util.Utils
 
 class  WeatherWidget : AppWidgetProvider() {
     private var temp: String? = null
-    private var loc: String? = null
     private var desc: String? = null
-    private var time: String? = null
     private var icon: String? = null
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
@@ -42,23 +40,30 @@ class  WeatherWidget : AppWidgetProvider() {
         val intent = Intent(context, WeatherService::class.java)
         intent.action = WeatherService.ACTION_UPDATE_WEATHER
         val pIntent = PendingIntent.getService(context, 10, intent, 0)
-        views.setOnClickPendingIntent(R.id.refresh, pIntent)
 
-        views.setViewVisibility(R.id.refresh, View.GONE)
+        views.setOnClickPendingIntent(R.id.main, pIntent)
         views.setViewVisibility(R.id.loading, View.VISIBLE)
-        setYahooPendingIntent(views, context)
-        setThings(views, context)
+        //setYahooPendingIntent(views, context) 添加点击动作
 
-        appWidgetManager.updateAppWidget(appWidgetIds, views)
+        appWidgetManager.updateAppWidget(appWidgetIds, views) //fixBug:修改挂件内容后肯定是要刷新Widget的
+
+        val handler = Handler()
+
+        handler.postDelayed({  //为了动画的延迟效果
+
+            setThings(views, context)
+            appWidgetManager.updateAppWidget(appWidgetIds, views)
+
+        }, 700)
+
+
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
         intent?.let {
             temp = it.getStringExtra(WeatherService.EXTRA_TEMP)
-            loc = it.getStringExtra(WeatherService.EXTRA_LOC)
             desc = it.getStringExtra(WeatherService.EXTRA_DESC)
             icon = it.getStringExtra(WeatherService.EXTRA_ICON)
-            time = it.getStringExtra(WeatherService.EXTRA_TIME)
         }
 
         super.onReceive(context, intent)
@@ -83,7 +88,7 @@ class  WeatherWidget : AppWidgetProvider() {
         super.onDisabled(context)
         stopService(context)
     }
-
+/* 添加点击动作
     private fun setYahooPendingIntent(views: RemoteViews, context: Context) {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = Uri.parse("https://openweathermap.org/")
@@ -91,19 +96,18 @@ class  WeatherWidget : AppWidgetProvider() {
 
         views.setOnClickPendingIntent(R.id.owm, pendingIntent)
     }
+    */
+
 
     private fun setThings(views: RemoteViews, context: Context) {
-        if (desc == null || loc == null || temp == null || time == null) {
+        if (desc == null || temp == null ) {
             sendUpdate(context)
         }
         else {
             views.setViewVisibility(R.id.loading, View.GONE)
-            views.setViewVisibility(R.id.refresh, View.VISIBLE)
             views.setImageViewBitmap(R.id.icon, Utils.processBmp(icon, context))
             views.setTextViewText(R.id.title, desc)
-            views.setTextViewText(R.id.location, loc)
             views.setTextViewText(R.id.temp, temp)
-            views.setTextViewText(R.id.time, time)
         }
     }
 

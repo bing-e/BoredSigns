@@ -218,13 +218,13 @@ class WeatherService : Service() {
                             val temp = model.main.temp
                             val tempDouble: Double = if (useCelsius) TempUnitConverter.convertToCelsius(temp) else TempUnitConverter.convertToFahrenheit(temp)
                             //val time = SimpleDateFormat("h:mm aa", Locale.getDefault()).format(Date(model.dt.toLong() * 1000))
-                            val time = SimpleDateFormat("k:mm", Locale.getDefault()).format(Date(System.currentTimeMillis()))
+                            //val time = SimpleDateFormat("k:mm", Locale.getDefault()).format(Date(System.currentTimeMillis()))
                             val formatted = DecimalFormat("#").format(tempDouble).toString()
 
                             extras.putString(EXTRA_TEMP, "${formatted}° ${if (useCelsius) "C" else "F"}")
-                            extras.putString(EXTRA_LOC, " ")
+                            //extras.putString(EXTRA_LOC, " ")
                             extras.putString(EXTRA_DESC, capitalize(model.weather[0].description))
-                            extras.putString(EXTRA_TIME, time)
+                            //extras.putString(EXTRA_TIME, time)
                             extras.putString(EXTRA_ICON, Utils.parseWeatherIconCode(model.weather[0].id, model.weather[0].icon))
 
                             Utils.sendWidgetUpdate(this@WeatherService, WeatherWidget::class.java, extras)
