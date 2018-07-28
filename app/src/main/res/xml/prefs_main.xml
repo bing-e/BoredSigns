@@ -2,8 +2,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Preference
-        android:title="@string/edit_screen_on"
-        android:key="screen_on" />
+        android:key="screen_on"
+        android:title="@string/edit_screen_on" />
 
     <Preference
         android:title="@string/edit_aod">

@@ -1,78 +1,90 @@
 <resources>
     <!--Labels-->
-    <string name="app_name">BoredSigns</string>
-    <string name="aod_editor">AOD Editor</string>
+    <string name="app_name">BoredSigns 辅屏工具栏</string>
+    <string name="aod_editor">息屏显示设置</string>
 
     <!--Widget Titles-->
-    <string name="info_widget_title">Information Screen</string>
-    <string name="image_widget_title">Image Screen</string>
-    <string name="weather_widget_title">Weather Screen</string>
-    <string name="weather_forecast_widget_title">Weather Forecast Screen</string>
-    <string name="navbar_widget_title">Navigation Bar Screen</string>
-    <string name="dev_widget_1_title">Developer Info Screen 1</string>
-    <string name="dev_widget_2_title">Developer Info Screen 2</string>
-    <string name="cpu_widget_title">CPU Usage Info</string>
-    <string name="ringer_widget_title">Ringer Volume Widget</string>
-    <string name="media_widget_title">Media Volume Widget</string>
+    <string name="info_widget_title">自定义状态栏</string>
+    <string name="image_widget_title">图片</string>
+    <string name="weather_widget_title">天气</string>
+    <string name="weather_forecast_widget_title">天气预报</string>
+    <string name="navbar_widget_title">虚拟导航栏</string>
+    <string name="dev_widget_1_title">帧率、内存、充电效率</string>
+    <string name="dev_widget_2_title">处理器、电池温度</string>
+    <string name="cpu_widget_title">CPU使用情况</string>
+    <string name="ringer_widget_title">铃声音量</string>
+    <string name="media_widget_title">媒体音量</string>
 
     <!--Widget Summaries-->
     <string name="dev_widget_1_desc">FPS, RAM, Charge Rate</string>
-    <string name="dev_widget_2_desc">CPU Temp, GPU Temp, Battery Temp</string>
-    <string name="cpu_widget_desc">CPU Usage in %, CPU core frequency in MHz</string>
+    <string name="dev_widget_2_desc">CPU, GPU, Battery</string>
+    <string name="cpu_widget_desc">CPU负载, 各核心MHz</string>
 
     <!--Preference Category Titles-->
-    <string name="battery">Battery</string>
-    <string name="notifications">Notifications</string>
-    <string name="clock">Clock</string>
-    <string name="signal">Mobile Signal</string>
-    <string name="wifi">WiFi</string>
+    <string name="battery">电池</string>
+    <string name="notifications">通知</string>
+    <string name="clock">时钟</string>
+    <string name="signal">移动网络</string>
+    <string name="wifi">WIFI</string>
 
     <!--Preference Titles-->
-    <string name="color_title">Color</string>
-    <string name="show">Show</string>
-    <string name="show_percent">Show Percentage</string>
-    <string name="hour_24">24-Hour Time</string>
-    <string name="show_date">Show Date</string>
-    <string name="show_ampm">Show AM/PM</string>
-    <string name="image">Image</string>
-    <string name="reset">Reset</string>
-    <string name="edit_screen_on">Edit Screen-On Widgets</string>
-    <string name="edit_aod">Edit AOD Widgets</string>
-    <string name="use_celsius">Use Celsius</string>
-    <string name="use_current_location">Use Current Location</string>
-    <string name="pick_location">Pick Location</string>
-    <string name="edit_layout">Edit Layout</string>
+    <string name="color_title">颜色</string>
+    <string name="show">开启</string>
+    <string name="show_percent">显示百分比</string>
+    <string name="hour_24">24小时制</string>
+    <string name="show_date">显示日期</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="week">周</string>
+    <string name="show_ampm">显示AM/PM</string>
+    <string name="image">图片</string>
+    <string name="reset">重置</string>
+    <string name="edit_screen_on">亮屏显示设置</string>
+    <string name="edit_aod">息屏显示设置</string>
+    <string name="use_celsius">使用摄氏度</string>
+    <string name="use_current_location">使用当前位置</string>
+    <string name="pick_location">手动选择位置</string>
+    <string name="edit_layout">自定义布局</string>
+    <string name="show_icon">显示图标</string>
 
     <!--NavBar-->
-    <string name="home">Home</string>
-    <string name="recents">Recents</string>
-    <string name="back">Back</string>
-    <string name="splitscreen">Toggle Split-Screen</string>
-    <string name="qs">Expand Quick Settings</string>
-    <string name="power">Open Power Menu</string>
-    <string name="assist">Assistant</string>
+    <string name="home">主页</string>
+    <string name="recents">最近应用</string>
+    <string name="back">返回</string>
+    <string name="splitscreen">多窗口</string>
+    <string name="qs">展开通知栏</string>
+    <string name="power">电源</string>
+    <string name="assist">辅助工具</string>
 
     <!--Explanations-->
-    <string name="accessibility_service">BoredSigns\' Accessibility Service is used for the Navigation Bar widget. It allows the back, home, recents, splitscreen, notification, power and qs buttons to function. This service is not used for anything else.</string>
-    <string name="location_services_needed">Location Services must be ON to use this feature.</string>
-    <string name="weather_icon_attr">Icons made by Erik Flowers on GitHub</string>
-    <string name="not_compat_message">Your device isn\'t compatible with BoredSigns.</string>
-    <string name="play_services_not_available">Play Services unavailable.</string>
-    <string name="unable_to_directly_launch_settings">Unable to directly launch the screen-on settings. After tapping \"OK,\" tap \"Show when main screen on.\"</string>
+    <string name="accessibility_service">BoredSigns\' 辅助服务权限仅用于虚拟导航栏</string>
+    <string name="location_services_needed">要使用本功能需要授予位置服务的权限</string>
+    <string name="weather_icon_attr">图标@Erik Flowers</string>
+    <string name="not_compat_message">您的设备与本软件不兼容，仅适用LG V10/V20</string>
+    <string name="play_services_not_available">Play Services 不可用</string>
+    <string name="unable_to_directly_launch_settings">亮屏显示挂件已装载至系统辅屏设置中，按 \"确定\"键后在辅屏设置中查看</string>
 
     <!--Titles-->
-    <string name="not_compat_title">Not Compatible!</string>
-    <string name="ringer">Ringer</string>
-    <string name="media">Media</string>
+    <string name="not_compat_title">不兼容</string>
+    <string name="ringer"> </string>
+    <string name="media"> </string>
 
     <!--Misc-->
-    <string name="select_image">Select Image</string>
-    <string name="error_retrieving_weather">Error retrieving weather info: %s</string>
-    <string name="grant_notification_access">Please allow notification access for BoredSigns.</string>
-    <string name="enable_accessibility">Please enable the BoredSigns accessibility service.</string>
-    <string name="no_config_activity">No configuration found</string>
-    <string name="tap_to_configure">Tap to Configure</string>
-    <string name="error_launching_config">Error launching configuration</string>
-    <string name="reset_image_instructions">Long-press an image button to reset the icon.</string>
-    <string name="unable_to_parse_cpu_info">Unable to parse CPU info</string>
+    <string name="select_image">选择图片</string>
+    <string name="error_retrieving_weather">获取失败: %s</string>
+    <string name="grant_notification_access">请授予权限</string>
+    <string name="enable_accessibility">请授予权限</string>
+    <string name="no_config_activity">找不到设置</string>
+    <string name="tap_to_configure">点击以设置</string>
+    <string name="error_launching_config">设置成功</string>
+    <string name="reset_image_instructions">长按图片按钮可重置图标</string>
+    <string name="unable_to_parse_cpu_info">CPU获取失败</string>
+
+    <!--Menu-->
+    <string name="play">谷歌商店 (v31b)</string>
+    <string name="zacharee1">开发 @Zacharee1</string>
+    <string name="binge">汉化优化 @Binge</string>
+    <string name="gfan">发布 @机锋论坛</string>
+
+
 </resources>

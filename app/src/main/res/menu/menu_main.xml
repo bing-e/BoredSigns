@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/play"
-        android:title="Play Store"/>
+        android:checkable="false"
+        android:title="@string/play" />
 
     <item
         android:id="@+id/github"
-        android:title="GitHub" />
+        android:title="@string/zacharee1" />
 
     <item
-        android:id="@+id/google_plus"
-        android:title="Google+" />
+        android:id="@+id/binge"
+        android:checkable="false"
+        android:title="@string/binge" />
+    <item
+        android:id="@+id/gfan"
+        android:checkable="false"
+        android:title="@string/gfan" />
 
 </menu>

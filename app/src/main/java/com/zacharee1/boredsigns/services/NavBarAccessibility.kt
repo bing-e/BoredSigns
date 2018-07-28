@@ -55,7 +55,8 @@ class NavBarAccessibility : AccessibilityService() {
                 POWER -> performGlobalAction(GLOBAL_ACTION_POWER_DIALOG)
 
                 ASSIST -> {
-                    val searchMan = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+                    //暂时没什么用，日后添加
+                    //val searchMan = getSystemService(Context.SEARCH_SERVICE) as SearchManager
                     //searchMan.launchAssist(null) 这里是导航栏布局里的的ASSIST 应该没什么用
 
                 }

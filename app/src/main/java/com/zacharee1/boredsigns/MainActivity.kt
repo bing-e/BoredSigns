@@ -33,8 +33,11 @@ class MainActivity : AppCompatActivity() {
                 intent.data = Uri.parse("https://github.com/zacharee/BoredSigns")
             }
 
-            R.id.google_plus -> {
-                intent.data = Uri.parse("https://plus.google.com/communities/105544332208886942595")
+            R.id.binge -> {
+                intent.data = Uri.parse("http://binge.bingestech.com")
+            }
+            R.id.gfan -> {
+                intent.data = Uri.parse("http://gfan-v20.bingestech.com")
             }
         }
 
