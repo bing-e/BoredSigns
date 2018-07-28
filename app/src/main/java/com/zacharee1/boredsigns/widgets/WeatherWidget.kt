@@ -17,7 +17,7 @@ import com.zacharee1.boredsigns.activities.PermissionsActivity
 import com.zacharee1.boredsigns.services.WeatherService
 import com.zacharee1.boredsigns.util.Utils
 
-class WeatherWidget : AppWidgetProvider() {
+class  WeatherWidget : AppWidgetProvider() {
     private var temp: String? = null
     private var loc: String? = null
     private var desc: String? = null

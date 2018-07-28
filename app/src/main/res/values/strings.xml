@@ -4,7 +4,7 @@
     <string name="aod_editor">息屏显示设置</string>
 
     <!--Widget Titles-->
-    <string name="info_widget_title">自定义状态栏</string>
+    <string name="info_widget_title">状态栏</string>
     <string name="image_widget_title">图片</string>
     <string name="weather_widget_title">天气</string>
     <string name="weather_forecast_widget_title">天气预报</string>
