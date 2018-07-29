@@ -86,5 +86,10 @@
     <string name="binge">汉化优化 @Binge</string>
     <string name="gfan">发布 @机锋论坛</string>
 
+    <!--Weather-->
+    <string name="weatherNum">时段数量</string>
+    <string name="weather_show_time">显示每时段时间</string>
+    <string name="basic_setting">基本设置</string>
+
 
 </resources>

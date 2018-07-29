@@ -1,28 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <SwitchPreference
-        android:title="@string/use_celsius"
-        android:key="weather_unit"
-        android:defaultValue="true" />
+    <PreferenceCategory android:title="@string/basic_setting">
 
-    <SwitchPreference
-        android:title="@string/use_current_location"
-        android:key="use_location"
-        android:defaultValue="true" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="weather_unit"
+            android:title="@string/use_celsius" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="use_location"
+            android:title="@string/use_current_location" />
+        <Preference
+            android:enabled="false"
+            android:key="manual_location"
+            android:title="@string/pick_location"
+            android:widgetLayout="@layout/google_attr" />
+    </PreferenceCategory>
 
-    <Preference
-        android:title="@string/pick_location"
-        android:key="manual_location"
-        android:enabled="false"
-        android:widgetLayout="@layout/google_attr"/>
+    <PreferenceCategory android:title="@string/weather_forecast_widget_title">
 
-    <Preference
-        android:enabled="false"
-        android:selectable="false" />
+        <SwitchPreference
+            android:id="@+id/weather_show_time"
+            android:defaultValue="true"
+            android:key="weather_show_time"
+            android:title="@string/weather_show_time" />
+        <EditTextPreference
+            android:id="@+id/weather_num"
+            android:defaultValue="6"
+            android:elevation="0dp"
+            android:key="weather_num"
+            android:numeric="integer"
+            android:phoneNumber="false"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/weatherNum" />
+    </PreferenceCategory>
 
-    <Preference
-        android:summary="@string/weather_icon_attr">
+    <Preference android:summary="@string/weather_icon_attr">
         <intent
             android:action="android.intent.action.VIEW"
             android:data="http://erikflowers.github.io/weather-icons/" />

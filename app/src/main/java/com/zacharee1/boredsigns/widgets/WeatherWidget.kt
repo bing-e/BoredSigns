@@ -50,12 +50,12 @@ class  WeatherWidget : AppWidgetProvider() {
         val handler = Handler()
 
         handler.postDelayed({  //为了动画的延迟效果
+            views.setViewVisibility(R.id.loading, View.GONE)
 
-            setThings(views, context)
             appWidgetManager.updateAppWidget(appWidgetIds, views)
 
         }, 700)
-
+        setThings(views, context)
 
     }
 
@@ -104,7 +104,6 @@ class  WeatherWidget : AppWidgetProvider() {
             sendUpdate(context)
         }
         else {
-            views.setViewVisibility(R.id.loading, View.GONE)
             views.setImageViewBitmap(R.id.icon, Utils.processBmp(icon, context))
             views.setTextViewText(R.id.title, desc)
             views.setTextViewText(R.id.temp, temp)

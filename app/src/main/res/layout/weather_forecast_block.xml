@@ -10,49 +10,34 @@
     <ImageView
         android:id="@+id/icon"
         android:layout_width="match_parent"
-        android:layout_height="75px" />
+        android:layout_height="85px" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="2px"
-            android:layout_height="match_parent"
-            android:layout_margin="4px"
-            android:background="#fff"
-            android:orientation="vertical" />
-
-        <TextView
-            android:id="@+id/tempLow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="2px"
-            android:layout_weight="1"
-            android:text="100°F"
-            android:textAlignment="center"
-            android:textColor="#fff"
-            android:textSize="30px" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tempHigh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2px"
+            android:layout_width="match_parent"
+            android:layout_height="38px"
             android:layout_weight="1"
             android:text="100°F"
             android:textAlignment="center"
             android:textColor="#fff"
-            android:textSize="30px" />
+            android:textSize="30px"
+            android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="2px"
-            android:layout_height="match_parent"
-            android:layout_margin="4px"
-            android:background="#fff"
-            android:orientation="vertical" />
-
+        <TextView
+            android:id="@+id/times"
+            android:layout_width="match_parent"
+            android:layout_height="25px"
+            android:layout_weight="2"
+            android:text="100°F"
+            android:textAlignment="center"
+            android:textColor="#fff"
+            android:textSize="23px"
+            android:visibility="visible" />
     </LinearLayout>
 
 </LinearLayout>

@@ -57,9 +57,13 @@ class WeatherService : Service() {
         const val EXTRA_ICON = "icon"
         const val EXTRA_TIME = "time"
 
+        const val WEATHER_SHOW_TIME = "weather_show_time"
+        const val WEATHER_NUM = "weather_num"
         const val WHICH_UNIT = "weather_unit"
+        var numToGet = "6"
     }
 
+    private var weatherShowTime: Boolean = true
     private var useCelsius: Boolean = true
     private lateinit var prefs: SharedPreferences
 
@@ -95,6 +99,7 @@ class WeatherService : Service() {
     override fun onCreate() {
         super.onCreate()
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
+
         alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val intent = Intent(this, this::class.java)
@@ -149,6 +154,10 @@ class WeatherService : Service() {
         when (action) {
             ACTION_UPDATE_WEATHER -> {
                 useCelsius = prefs.getBoolean(WHICH_UNIT, true)
+
+                numToGet = prefs.getString(WEATHER_NUM,"6")
+                weatherShowTime = prefs.getBoolean(WEATHER_SHOW_TIME,true)
+
                 val locMan = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
                 if (checkCallingOrSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -192,7 +201,10 @@ class WeatherService : Service() {
 
             FirebaseAnalytics.getInstance(this)
                     .logEvent("ApiException", bundle)
+        } catch (e:Exception){
+            getSavedLocWeather()
         }
+
     }
 
     private fun getSavedLocWeather() {
@@ -221,7 +233,8 @@ class WeatherService : Service() {
                             //val time = SimpleDateFormat("k:mm", Locale.getDefault()).format(Date(System.currentTimeMillis()))
                             val formatted = DecimalFormat("#").format(tempDouble).toString()
 
-                            extras.putString(EXTRA_TEMP, "${formatted}° ${if (useCelsius) "C" else "F"}")
+                            extras.putString(EXTRA_TEMP, "${formatted}°${if (useCelsius) "C" else "F"}")
+
                             //extras.putString(EXTRA_LOC, " ")
                             extras.putString(EXTRA_DESC, capitalize(model.weather[0].description))
                             //extras.putString(EXTRA_TIME, time)
@@ -254,13 +267,14 @@ class WeatherService : Service() {
                                 .map { DecimalFormat("#").format(it).toString() }
                                 .mapTo(highTemps) { "$it° ${if (useCelsius) "C" else "F"}" }
 
+
                         model.list
                                 .map { it.main.temp_min }
                                 .map { if (useCelsius) TempUnitConverter.convertToCelsius(it) else TempUnitConverter.convertToFahrenheit(it) }
                                 .map { DecimalFormat("#").format(it).toString() }
                                 .mapTo(lowTemps) { "$it° ${if (useCelsius) "C" else "F"}" }
 
-                        model.list.mapTo(times) { SimpleDateFormat("M/d", Locale.getDefault()).format(Date(it.dt.toLong() * 1000)) }
+                        model.list.mapTo(times) { SimpleDateFormat("k:mm", Locale.getDefault()).format(Date(it.dt.toLong() * 1000)) }
 
                         model.list.mapTo(icons) { Utils.parseWeatherIconCode(it.weather[0].id, it.weather[0].icon) }
 
@@ -269,6 +283,7 @@ class WeatherService : Service() {
                         extras.putString(EXTRA_LOC, " ")
                         extras.putStringArrayList(EXTRA_TIME, times)
                         extras.putStringArrayList(EXTRA_ICON, icons)
+                        extras.putBoolean(WEATHER_SHOW_TIME, weatherShowTime)
 
                         Utils.sendWidgetUpdate(this@WeatherService, WeatherForecastWidget::class.java, extras)
                     }
@@ -414,7 +429,7 @@ class WeatherService : Service() {
     }
 
     class ForecastParser {
-        private val numToGet = 7
+
         private val template = "http://api.openweathermap.org/data/2.5/forecast?lat=LAT&lon=LON&cnt=$numToGet&appid=$API_KEY"
 
         @SuppressLint("CheckResult")
@@ -456,7 +471,7 @@ class WeatherService : Service() {
 
                 weather.icon = s.getJSONArray("weather").getJSONObject(0).getString("icon")
                 weather.id = s.getJSONArray("weather").getJSONObject(0).getString("id")
-                main.temp_max = s.getJSONObject("main").getString("temp_max")
+                main.temp_max = s.getJSONObject("main").getString("temp")
                 main.temp_min = s.getJSONObject("main").getString("temp_min")
 
                 l.weather = arrayOf(weather)
@@ -465,8 +480,6 @@ class WeatherService : Service() {
 
                 list.add(l)
             }
-
-            list.removeAt(0)
 
             val listArr = arrayOfNulls<List>(list.size)
             response.list = list.toArray(listArr)

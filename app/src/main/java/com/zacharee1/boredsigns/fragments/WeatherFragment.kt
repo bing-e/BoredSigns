@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.location.LocationManager
 import android.os.Bundle
+import android.preference.EditTextPreference
 import android.preference.Preference
 import android.preference.PreferenceFragment
 import android.preference.SwitchPreference
@@ -45,6 +46,10 @@ class WeatherFragment : PreferenceFragment() {
         val celsius = findPreference("weather_unit") as SwitchPreference
         val useCurrent = findPreference("use_location") as SwitchPreference
         val pickLocation = findPreference("manual_location")
+        val weatherNum = findPreference("weather_num") as EditTextPreference
+        val weatherShowTime = findPreference("weather_show_time") as SwitchPreference
+
+
         pickLocation.isEnabled = !useCurrent.isChecked
 
         val listener = Preference.OnPreferenceChangeListener {
@@ -55,6 +60,12 @@ class WeatherFragment : PreferenceFragment() {
                 extras.putBoolean("weather_unit", !(any as Boolean))
             }
 
+            if (pref.key == "weather_show_time"){
+                extras.putBoolean("weather_show_time", !(any as Boolean))
+            }
+
+
+
             if (Utils.isWidgetInUse(WeatherWidget::class.java, context)) Utils.sendWidgetUpdate(context, WeatherWidget::class.java, extras)
             if (Utils.isWidgetInUse(WeatherForecastWidget::class.java, context)) Utils.sendWidgetUpdate(context, WeatherForecastWidget::class.java, extras)
 
@@ -63,7 +74,8 @@ class WeatherFragment : PreferenceFragment() {
             }
             true
         }
-
+        weatherShowTime.onPreferenceChangeListener = listener
+        weatherNum.onPreferenceChangeListener = listener
         celsius.onPreferenceChangeListener = listener
         useCurrent.onPreferenceChangeListener = listener
         pickLocation.setOnPreferenceClickListener {
