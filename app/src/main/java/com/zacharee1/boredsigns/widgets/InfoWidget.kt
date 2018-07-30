@@ -30,7 +30,6 @@ import android.telephony.*
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.zacharee1.boredsigns.R
 import com.zacharee1.boredsigns.activities.PermissionsActivity
 import com.zacharee1.boredsigns.services.InfoService
@@ -480,7 +479,7 @@ class InfoWidget : AppWidgetProvider() {
                 bundle.putString("message", e.localizedMessage)
                 bundle.putString("stacktrace", Arrays.toString(e.stackTrace))
                 bundle.putString("package", notification?.packageName)
-                FirebaseAnalytics.getInstance(context).logEvent("info_widget_package_error", bundle)
+
             }
         }
 

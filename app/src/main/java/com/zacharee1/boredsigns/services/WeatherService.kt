@@ -9,9 +9,9 @@ import android.app.Service
 import android.content.*
 import android.content.pm.PackageManager
 //import android.location.Geocoder
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
+//import android.location.Location
+//import android.location.LocationListener
+//import android.location.LocationManager
 import android.location.LocationManager.NETWORK_PROVIDER
 import android.os.Bundle
 import android.os.IBinder
@@ -20,8 +20,6 @@ import android.preference.PreferenceManager
 import android.support.annotation.RequiresPermission
 import android.support.v4.content.LocalBroadcastManager
 import android.widget.Toast
-
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.zacharee1.boredsigns.R
 import com.zacharee1.boredsigns.util.Utils
 import com.zacharee1.boredsigns.widgets.WeatherForecastWidget
@@ -63,8 +61,8 @@ class WeatherService : Service() {
         const val WHICH_UNIT = "weather_unit"
         var numToGet = "6"
     }
-    private var lat: Double = 0.0
-    private var lon: Double = 0.0
+    private var lat: Double = 22.5
+    private var lon: Double = 113.9
     var weatherShowTime: Boolean = true
     private var useCelsius: Boolean = true
     private lateinit var prefs: SharedPreferences
@@ -74,7 +72,6 @@ class WeatherService : Service() {
 
     private lateinit var alarmIntent: PendingIntent
 
-    private var locationManager : LocationManager? = null
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
@@ -134,36 +131,19 @@ class WeatherService : Service() {
             }, null)
         }
         */
-        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
-
-        if (checkCallingOrSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
-        }
-
-
 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, IntentFilter(ACTION_UPDATE_WEATHER))
-        startLocationUpdates()
+        getCurrentLocWeather()
     }
 
 
 
     override fun onDestroy() {
         super.onDestroy()
-        stopLocationUpdates()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
         alarmManager.cancel(alarmIntent)
     }
 
-    private val locationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: Location) {
-            lon = location.longitude
-            lat = location.latitude
-        }
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-        override fun onProviderEnabled(provider: String) {}
-        override fun onProviderDisabled(provider: String) {}
-    }
 
     private fun onHandleIntent(action: String?) {
         when (action) {
@@ -172,39 +152,17 @@ class WeatherService : Service() {
 
                 numToGet = prefs.getString(WEATHER_NUM,"6")
                 weatherShowTime = prefs.getBoolean(WEATHER_SHOW_TIME,true)
+                getCurrentLocWeather()
 
-                val locMan = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
-                if (checkCallingOrSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    if (!locMan.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                        Toast.makeText(this, "没有可用的位置提供器", Toast.LENGTH_SHORT).show()
-                    } else {
-                        getCurrentLocWeather()
-                    }
-                } else {
-                    Toast.makeText(this, "请授予位置权限", Toast.LENGTH_SHORT).show()
-                }
             }
         }
     }
 
-    @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+    //@RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     private fun getCurrentLocWeather() {
+
        getWeather(lat,lon)
 
-    }
-
-
-
-    private fun getSavedLocWeather() {
-        val loc = getSavedLoc()
-        getWeather(loc.lat, loc.lon)
-    }
-
-    private fun getSavedLoc(): Loc {
-        val lat = prefs.getFloat("weather_lat", 51.508530F).toDouble()
-        val lon = prefs.getFloat("weather_lon", -0.076132F).toDouble()
-        return Loc(lat, lon)
     }
 
     private fun getWeather(lat: Double, lon: Double) {
@@ -287,7 +245,6 @@ class WeatherService : Service() {
             val bundle = Bundle()
             bundle.putString("message", e.localizedMessage)
             bundle.putString("stacktrace", Arrays.toString(e.stackTrace))
-            FirebaseAnalytics.getInstance(this).logEvent("failed_weather", bundle)
             Toast.makeText(this, String.format(Locale.US, resources.getString(R.string.error_retrieving_weather), e.localizedMessage), Toast.LENGTH_LONG).show()
         }
     }
@@ -307,12 +264,6 @@ class WeatherService : Service() {
         return builder.toString()
     }
 
-    private fun startLocationUpdates() {
-
-    }
-
-    private fun stopLocationUpdates() {
-    }
 
     private fun isCurrentActivated(): Boolean {
         return Utils.isWidgetInUse(WeatherWidget::class.java, this)

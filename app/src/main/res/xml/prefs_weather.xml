@@ -11,11 +11,7 @@
             android:defaultValue="true"
             android:key="use_location"
             android:title="@string/use_current_location" />
-        <Preference
-            android:enabled="false"
-            android:key="manual_location"
-            android:title="@string/pick_location"
-            android:widgetLayout="@layout/google_attr" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/weather_forecast_widget_title">

@@ -124,13 +124,13 @@ class VolumeService : Service() {
     private fun turnUpMedia() {
         val currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
 
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume + 5, 0)
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume + 1, 0)
     }
 
     private fun turnDownMedia() {
         val currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
 
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume - 5, 0)
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume - 1, 0)
     }
 
     private fun updateAll() {

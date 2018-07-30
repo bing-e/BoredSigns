@@ -11,7 +11,7 @@ import android.preference.Preference
 import android.preference.PreferenceFragment
 import android.preference.SwitchPreference
 import com.zacharee1.boredsigns.R
-import com.zacharee1.boredsigns.activities.LocationPickerActivity
+
 import com.zacharee1.boredsigns.util.Utils
 import com.zacharee1.boredsigns.widgets.WeatherForecastWidget
 import com.zacharee1.boredsigns.widgets.WeatherWidget
@@ -19,9 +19,11 @@ import com.zacharee1.boredsigns.widgets.WeatherWidget
 class WeatherFragment : PreferenceFragment() {
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            /*
             if (intent?.action == LocationManager.PROVIDERS_CHANGED_ACTION) {
                 disableCurrentLocationIfNoLocationAvailable()
             }
+            */
         }
     }
 
@@ -33,24 +35,20 @@ class WeatherFragment : PreferenceFragment() {
         context.registerReceiver(broadcastReceiver, filter)
 
         setSwitchStatesAndListeners()
-        disableCurrentLocationIfNoLocationAvailable()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-
         context.unregisterReceiver(broadcastReceiver)
     }
 
     private fun setSwitchStatesAndListeners() {
         val celsius = findPreference("weather_unit") as SwitchPreference
         val useCurrent = findPreference("use_location") as SwitchPreference
-        val pickLocation = findPreference("manual_location")
+
         val weatherNum = findPreference("weather_num") as EditTextPreference
         val weatherShowTime = findPreference("weather_show_time") as SwitchPreference
 
-
-        pickLocation.isEnabled = !useCurrent.isChecked
 
         val listener = Preference.OnPreferenceChangeListener {
             pref, any ->
@@ -64,26 +62,19 @@ class WeatherFragment : PreferenceFragment() {
                 extras.putBoolean("weather_show_time", !(any as Boolean))
             }
 
-
-
             if (Utils.isWidgetInUse(WeatherWidget::class.java, context)) Utils.sendWidgetUpdate(context, WeatherWidget::class.java, extras)
             if (Utils.isWidgetInUse(WeatherForecastWidget::class.java, context)) Utils.sendWidgetUpdate(context, WeatherForecastWidget::class.java, extras)
 
-            if (pref.key == "use_location") {
-                pickLocation.isEnabled = !(any as Boolean)
-            }
             true
         }
         weatherShowTime.onPreferenceChangeListener = listener
         weatherNum.onPreferenceChangeListener = listener
         celsius.onPreferenceChangeListener = listener
         useCurrent.onPreferenceChangeListener = listener
-        pickLocation.setOnPreferenceClickListener {
-            startActivity(Intent(context, LocationPickerActivity::class.java))
-            true
-        }
+
     }
 
+    /*
     private fun disableCurrentLocationIfNoLocationAvailable() {
         val locMan = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val gps = locMan.isProviderEnabled(LocationManager.GPS_PROVIDER)
@@ -101,4 +92,5 @@ class WeatherFragment : PreferenceFragment() {
             current.summary = null
         }
     }
+    */
 }

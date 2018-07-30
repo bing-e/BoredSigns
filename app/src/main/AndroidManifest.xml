@@ -86,10 +86,7 @@
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:exported="true"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity
-            android:name=".activities.LocationPickerActivity"
-            android:exported="true"
-            android:theme="@style/AppTheme.Null" />
+
         <activity
             android:name=".activities.AODActivity"
             android:exported="true"
@@ -283,24 +280,6 @@
             android:name=".services.CPUInfoService"
             android:enabled="true"
             android:exported="true" />
-        <service android:name=".services.FirebaseService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCo0GdKgs-Bp0QKcHcM3nQyj7LPyEe82mE" />
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@mipmap/ic_launcher_boredsigns" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" />
 
         <service
             android:name=".services.VolumeService"

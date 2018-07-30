@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
-apply plugin: 'io.fabric'
+
 
 project.ext.version = 31
 
@@ -38,24 +38,20 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'com.jaredrummler:colorpicker:1.0.2'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.6.0'
-    implementation 'com.google.android.gms:play-services-location:15.0.1'
-    implementation 'com.google.android.gms:play-services-maps:15.0.1'
-    implementation 'com.google.android.gms:play-services-places:15.0.1'
     implementation 'com.android.support:design:27.1.1'
     implementation ('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
     }
-    implementation 'com.google.firebase:firebase-core:16.0.1'
+
     implementation 'com.github.javiersantos:PiracyChecker:1.2.3'
     implementation project(':draglinearlayout')
     implementation 'com.github.code-crusher:EasyWeather:v1.2'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
     implementation 'com.github.brianPlummer:tinydancer:0.1.2'
-    implementation 'com.google.firebase:firebase-messaging:17.1.0'
+
     implementation ('com.googlecode.json-simple:json-simple:1.1.1') {
         exclude group: 'org.hamcrest', module: 'hamcrest-core'
     }
 }
 
-apply plugin: 'com.google.gms.google-services'
