@@ -1,5 +1,6 @@
 package com.zacharee1.boredsigns.services
 
+import android.app.Notification
 import android.app.NotificationManager
 import android.app.Service
 import android.content.BroadcastReceiver
@@ -86,16 +87,19 @@ class VolumeService : Service() {
 
         registerReceiver(receiver, FILTER)
         super.onCreate()
+        startForeground(2, Notification())
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
 
         try {
             unregisterReceiver(receiver)
         } catch (e: Exception) {}
 
         contentResolver.unregisterContentObserver(systemObserver)
+        stopForeground(true)
     }
 
     private fun turnUpRinger() {

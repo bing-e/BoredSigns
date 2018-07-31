@@ -222,17 +222,8 @@
                 android:name="com.lge.signboard.widget.description"
                 android:value="cpu_widget_desc" />
         </receiver>
-        <receiver
-            android:name=".widgets.RingerVolumeWidget"
-            android:label="@string/ringer_widget_title">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
 
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/volume_widget_info" />
-        </receiver>
+
         <receiver
             android:name=".widgets.MediaVolumeWidget"
             android:label="@string/media_widget_title">
