@@ -49,6 +49,9 @@ class WeatherFragment : PreferenceFragment() {
         val weatherNum = findPreference("weather_num") as EditTextPreference
         val weatherShowTime = findPreference("weather_show_time") as SwitchPreference
 
+        val ifEditLoc = findPreference("ifEditLoc") as SwitchPreference
+        val editLoc = findPreference("editLoc") as EditTextPreference
+
 
         val listener = Preference.OnPreferenceChangeListener {
             pref, any ->
@@ -62,11 +65,18 @@ class WeatherFragment : PreferenceFragment() {
                 extras.putBoolean("weather_show_time", !(any as Boolean))
             }
 
+            if (pref.key == "ifEditLoc"){
+                extras.putBoolean("ifEditLoc", !(any as Boolean))
+            }
+
+
             if (Utils.isWidgetInUse(WeatherWidget::class.java, context)) Utils.sendWidgetUpdate(context, WeatherWidget::class.java, extras)
             if (Utils.isWidgetInUse(WeatherForecastWidget::class.java, context)) Utils.sendWidgetUpdate(context, WeatherForecastWidget::class.java, extras)
 
             true
         }
+        ifEditLoc.onPreferenceChangeListener = listener
+        editLoc.onPreferenceChangeListener = listener
         weatherShowTime.onPreferenceChangeListener = listener
         weatherNum.onPreferenceChangeListener = listener
         celsius.onPreferenceChangeListener = listener
@@ -74,23 +84,4 @@ class WeatherFragment : PreferenceFragment() {
 
     }
 
-    /*
-    private fun disableCurrentLocationIfNoLocationAvailable() {
-        val locMan = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val gps = locMan.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        val net = locMan.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-
-        val current = findPreference("use_location") as SwitchPreference
-
-        if (!gps && !net) {
-            current.isChecked = false
-            preferenceManager.sharedPreferences.edit().putBoolean("use_location", false).apply()
-            current.isEnabled = false
-            current.summary = resources.getString(R.string.location_services_needed)
-        } else {
-            current.isEnabled = true
-            current.summary = null
-        }
-    }
-    */
 }

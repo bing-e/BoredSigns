@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Handler
 import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
@@ -25,8 +26,15 @@ class WeatherForecastWidget : AppWidgetProvider() {
     private var icon: ArrayList<String>? = null
     private var times: ArrayList<String>? = null //保存所有获取到的时间
     private var weatherShowTime :Boolean = true
+    private var showloading: Int? = 0
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+        val views = RemoteViews(context.packageName, R.layout.weather_forecast_widget)
+        if (showloading==1){
+            openLoading(views,appWidgetManager,appWidgetIds)
+            showloading=0
+            return
+        }
         for (perm in PermissionsActivity.WEATHER_REQUEST) {
             if (context.checkCallingOrSelfPermission(perm) != PackageManager.PERMISSION_GRANTED) {
                 val intent = Intent(context, PermissionsActivity::class.java)
@@ -39,28 +47,36 @@ class WeatherForecastWidget : AppWidgetProvider() {
 
         startService(context)
 
-        val views = RemoteViews(context.packageName, R.layout.weather_forecast_widget)
-
         val intent = Intent(context, WeatherService::class.java)
         intent.action = WeatherService.ACTION_UPDATE_WEATHER
         val pIntent = PendingIntent.getService(context, 10, intent, 0)
         views.setOnClickPendingIntent(R.id.main, pIntent)
-        views.setViewVisibility(R.id.loading, View.VISIBLE)
+        //views.setViewVisibility(R.id.loading, View.VISIBLE)
         //setYahooPendingIntent(views, context) 添加点击动作
 
         appWidgetManager.updateAppWidget(appWidgetIds, views) //fixBug:修改挂件内容后肯定是要刷新Widget的
 
-        val handler = Handler()
-
-        handler.postDelayed({  //为了动画的延迟效果
-            views.setViewVisibility(R.id.loading, View.GONE)
-            appWidgetManager.updateAppWidget(appWidgetIds, views)
-        }, 700)
-
-        setThings(views, context)
+        if (tempHigh != null && times != null){
+            setThings(views, context)
+            closeLoading(views,appWidgetManager,appWidgetIds)
+        }else{
+            openLoading(views,appWidgetManager,appWidgetIds)
+            sendUpdate(context)
+        }
 
 
     }
+
+    private fun openLoading(views: RemoteViews,appWidgetManager: AppWidgetManager,  appWidgetIds: IntArray){
+        views.setViewVisibility(R.id.loading, View.VISIBLE)
+        appWidgetManager.updateAppWidget(appWidgetIds, views)
+
+    }
+    private fun closeLoading(views: RemoteViews,appWidgetManager: AppWidgetManager,  appWidgetIds: IntArray){
+        views.setViewVisibility(R.id.loading, View.GONE)
+        appWidgetManager.updateAppWidget(appWidgetIds, views)
+    }
+
 
     override fun onReceive(context: Context?, intent: Intent?) {
         intent?.let {
@@ -69,6 +85,7 @@ class WeatherForecastWidget : AppWidgetProvider() {
             times = it.getStringArrayListExtra(WeatherService.EXTRA_TIME)
             tempLow = it.getStringArrayListExtra(WeatherService.EXTRA_TEMP_EX)
             weatherShowTime = it.getBooleanExtra(WeatherService.WEATHER_SHOW_TIME,true)
+            showloading = it.getIntExtra(WeatherService.SHOW_LOADING,0)
 
         }
 
@@ -133,10 +150,17 @@ class WeatherForecastWidget : AppWidgetProvider() {
     }
 
     private fun startService(context: Context?) {
-        context?.startService(Intent(context, WeatherService::class.java))
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context?.startForegroundService(Intent(context, WeatherService::class.java))
+        } else {
+            context?.startService(Intent(context, WeatherService::class.java))
+        }
+       // context?.startService(Intent(context, WeatherService::class.java))
     }
 
     private fun stopService(context: Context?) {
+
         context?.stopService(Intent(context, WeatherService::class.java))
     }
 }

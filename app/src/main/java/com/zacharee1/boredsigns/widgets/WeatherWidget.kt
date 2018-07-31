@@ -16,13 +16,28 @@ import com.zacharee1.boredsigns.R
 import com.zacharee1.boredsigns.activities.PermissionsActivity
 import com.zacharee1.boredsigns.services.WeatherService
 import com.zacharee1.boredsigns.util.Utils
+import android.support.v4.content.ContextCompat.startForegroundService
+import android.os.Build
+
+
 
 class  WeatherWidget : AppWidgetProvider() {
     private var temp: String? = null
     private var desc: String? = null
     private var icon: String? = null
+    private var loc: String? = null
+    private var ifEditloc: Boolean = false
+    private var editLoc: String? = null
+    private var showloading: Int? = 0
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+        val views = RemoteViews(context.packageName, R.layout.weather_widget)
+        if (showloading==1){
+            openLoading(views,appWidgetManager,appWidgetIds)
+            showloading=0
+            return
+        }
+
         for (perm in PermissionsActivity.WEATHER_REQUEST) {
             if (context.checkCallingOrSelfPermission(perm) != PackageManager.PERMISSION_GRANTED) {
                 val intent = Intent(context, PermissionsActivity::class.java)
@@ -35,36 +50,54 @@ class  WeatherWidget : AppWidgetProvider() {
 
         startService(context)
 
-        val views = RemoteViews(context.packageName, R.layout.weather_widget)
+
 
         val intent = Intent(context, WeatherService::class.java)
         intent.action = WeatherService.ACTION_UPDATE_WEATHER
         val pIntent = PendingIntent.getService(context, 10, intent, 0)
 
         views.setOnClickPendingIntent(R.id.main, pIntent)
-        views.setViewVisibility(R.id.loading, View.VISIBLE)
+
+
+        //views.setViewVisibility(R.id.loading, View.VISIBLE)
         //setYahooPendingIntent(views, context) 添加点击动作
 
-        appWidgetManager.updateAppWidget(appWidgetIds, views) //fixBug:修改挂件内容后肯定是要刷新Widget的
+        //appWidgetManager.updateAppWidget(appWidgetIds, views) //fixBug:修改挂件内容后肯定是要刷新Widget的
 
-        val handler = Handler()
+        //val handler = Handler()
 
-        handler.postDelayed({  //为了动画的延迟效果
-            views.setViewVisibility(R.id.loading, View.GONE)
+        if (temp != null && desc != null){
+            setThings(views, context)
+            closeLoading(views,appWidgetManager,appWidgetIds)
+        }else{
+            openLoading(views,appWidgetManager,appWidgetIds)
+            sendUpdate(context)
+        }
 
-            appWidgetManager.updateAppWidget(appWidgetIds, views)
-
-        }, 700)
-        setThings(views, context)
 
     }
+    private fun openLoading(views: RemoteViews,appWidgetManager: AppWidgetManager,  appWidgetIds: IntArray){
+        views.setViewVisibility(R.id.loading, View.VISIBLE)
+        appWidgetManager.updateAppWidget(appWidgetIds, views)
+
+    }
+    private fun closeLoading(views: RemoteViews,appWidgetManager: AppWidgetManager,  appWidgetIds: IntArray){
+        views.setViewVisibility(R.id.loading, View.GONE)
+        appWidgetManager.updateAppWidget(appWidgetIds, views)
+    }
+
 
     override fun onReceive(context: Context?, intent: Intent?) {
         intent?.let {
             temp = it.getStringExtra(WeatherService.EXTRA_TEMP)
             desc = it.getStringExtra(WeatherService.EXTRA_DESC)
             icon = it.getStringExtra(WeatherService.EXTRA_ICON)
+            loc = it.getStringExtra(WeatherService.EXTRA_LOC)
+            showloading = it.getIntExtra(WeatherService.SHOW_LOADING,0)
+            ifEditloc = it.getBooleanExtra(WeatherService.IF_EDIT_LOC,false)
+            editLoc = it.getStringExtra(WeatherService.EDIT_LOC)
         }
+
 
         super.onReceive(context, intent)
     }
@@ -107,8 +140,13 @@ class  WeatherWidget : AppWidgetProvider() {
             views.setImageViewBitmap(R.id.icon, Utils.processBmp(icon, context))
             views.setTextViewText(R.id.title, desc)
             views.setTextViewText(R.id.temp, temp)
+
+            if (ifEditloc)loc = editLoc
+            views.setTextViewText(R.id.loc,loc)
+
         }
     }
+
 
     private fun sendUpdate(context: Context) {
         val intent = Intent(WeatherService.ACTION_UPDATE_WEATHER)
@@ -116,7 +154,12 @@ class  WeatherWidget : AppWidgetProvider() {
     }
 
     private fun startService(context: Context?) {
-        context?.startService(Intent(context, WeatherService::class.java))
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context?.startForegroundService(Intent(context, WeatherService::class.java))
+        } else {
+            context?.startService(Intent(context, WeatherService::class.java))
+        }
     }
 
     private fun stopService(context: Context?) {

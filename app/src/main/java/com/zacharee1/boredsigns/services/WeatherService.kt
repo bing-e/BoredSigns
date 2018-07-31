@@ -4,6 +4,7 @@ import android.Manifest
 //import android.annotation.RequiresPermission
 import android.annotation.SuppressLint
 import android.app.AlarmManager
+import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.*
@@ -20,6 +21,13 @@ import android.preference.PreferenceManager
 import android.support.annotation.RequiresPermission
 import android.support.v4.content.LocalBroadcastManager
 import android.widget.Toast
+
+import com.baidu.location.BDAbstractLocationListener
+import com.baidu.location.BDLocation
+import com.baidu.location.LocationClient
+import com.baidu.location.LocationClientOption
+import com.baidu.location.LocationClientOption.LocationMode
+
 import com.zacharee1.boredsigns.R
 import com.zacharee1.boredsigns.util.Utils
 import com.zacharee1.boredsigns.widgets.WeatherForecastWidget
@@ -45,6 +53,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class WeatherService : Service() {
+
     companion object {
         const val ACTION_UPDATE_WEATHER = "com.zacharee1.boredsigns.action.UPDATE_WEATHER"
         const val API_KEY = "***REMOVED***" //IMPORTANT: Use your own OWM API key here when building for yourself!
@@ -57,14 +66,22 @@ class WeatherService : Service() {
         const val EXTRA_TIME = "time"
 
         const val WEATHER_SHOW_TIME = "weather_show_time"
+        const val IF_EDIT_LOC ="ifEditLoc"
+        const val EDIT_LOC = "editLoc"
+
         const val WEATHER_NUM = "weather_num"
         const val WHICH_UNIT = "weather_unit"
+        const val SHOW_LOADING = "show_loading"
+
         var numToGet = "6"
     }
-    private var lat: Double = 22.5
-    private var lon: Double = 113.9
-    var weatherShowTime: Boolean = true
+    private var lat: Double = 20.0
+    private var lon: Double = 110.0
+    private var weatherShowTime: Boolean = true
     private var useCelsius: Boolean = true
+    private var loc: String = ""
+    private var ifEditLoc: Boolean = false
+    private var editLoc: String = ""
     private lateinit var prefs: SharedPreferences
 
 
@@ -72,12 +89,40 @@ class WeatherService : Service() {
 
     private lateinit var alarmIntent: PendingIntent
 
+    private var mLocationClient: LocationClient? = null
+    private var myListener:MyLocationListener = MyLocationListener()
+    private var mOption = LocationClientOption()
+
+    inner class MyLocationListener : BDAbstractLocationListener() {
+        override fun onReceiveLocation(location: BDLocation) {
+            //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
+            //以下只列举部分获取经纬度相关（常用）的结果信息
+            //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
+
+             lat = location.latitude    //获取纬度信息
+             lon = location.longitude    //获取经度信息
+            val radius = location.radius    //获取定位精度，默认值为0.0f
+
+            val coorType = location.coorType
+            //获取经纬度坐标类型，以LocationClientOption中设置过的坐标类型为准
+
+            val errorCode = location.locType
+            //获取定位类型、定位错误返回码，具体信息可参照类参考中BDLocation类中的说明
+            loc = location.street + ", " +location.district
+
+            if (lat < 0 || lon < 0 )return
+
+            getWeather(lat,lon)
+            mLocationClient!!.stop()
+        }
+    }
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
             onHandleIntent(p1?.action)
         }
     }
+
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
@@ -90,6 +135,7 @@ class WeatherService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        startForeground(1, Notification())
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
         alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -103,34 +149,23 @@ class WeatherService : Service() {
                 7200 * 1000,
                 alarmIntent)
 
-        /*
-        if (checkCallingOrSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        mLocationClient = LocationClient(getApplicationContext())
 
-            val locMan = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            val provider = when {
-                locMan.isProviderEnabled(LocationManager.NETWORK_PROVIDER) -> LocationManager.NETWORK_PROVIDER
-                locMan.isProviderEnabled(LocationManager.GPS_PROVIDER) -> LocationManager.GPS_PROVIDER
-                else -> LocationManager.PASSIVE_PROVIDER
-            }
-            locMan.requestSingleUpdate(provider, object : android.location.LocationListener {
-                override fun onLocationChanged(p0: Location?) {
-                    onHandleIntent(ACTION_UPDATE_WEATHER)
-                }
+        mOption.setLocationMode(LocationMode.Battery_Saving)//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        mOption.setCoorType("bd09ll")//可选，默认gcj02，设置返回的定位结果坐标系，如果配合百度地图使用，建议设置为bd09ll;
+        mOption.setScanSpan(0)//可选，默认0，即仅定位一次，设置发起连续定位请求的间隔需要大于等于1000ms才是有效的
+        mOption.setIsNeedAddress(true)//可选，设置是否需要地址信息，默认不需要
+        mOption.setIsNeedLocationDescribe(true)//可选，设置是否需要地址描述
+        mOption.setNeedDeviceDirect(false)//可选，设置是否需要设备方向结果
+        mOption.setLocationNotify(false)//可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
+        mOption.setIgnoreKillProcess(true)//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        mOption.setIsNeedLocationDescribe(true)//可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
+        mOption.setIsNeedLocationPoiList(true)//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
+        mOption.SetIgnoreCacheException(false)//可选，默认false，设置是否收集CRASH信息，默认收集
+        mOption.setOpenGps(false)//可选，默认false，设置是否开启Gps定位
+        mOption.setIsNeedAltitude(false)//可选，默认false，设置定位时是否需要海拔信息，默认不需要，除基础定位版本都可用
 
-                override fun onProviderDisabled(p0: String?) {
 
-                }
-
-                override fun onProviderEnabled(p0: String?) {
-
-                }
-
-                override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
-
-                }
-            }, null)
-        }
-        */
 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, IntentFilter(ACTION_UPDATE_WEATHER))
         getCurrentLocWeather()
@@ -142,6 +177,8 @@ class WeatherService : Service() {
         super.onDestroy()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
         alarmManager.cancel(alarmIntent)
+
+        stopForeground(true)// 停止前台服务--参数：表示是否移除之前的通知
     }
 
 
@@ -149,19 +186,28 @@ class WeatherService : Service() {
         when (action) {
             ACTION_UPDATE_WEATHER -> {
                 useCelsius = prefs.getBoolean(WHICH_UNIT, true)
-
                 numToGet = prefs.getString(WEATHER_NUM,"6")
                 weatherShowTime = prefs.getBoolean(WEATHER_SHOW_TIME,true)
+                ifEditLoc = prefs.getBoolean(IF_EDIT_LOC,false)
+                editLoc = prefs.getString(EDIT_LOC,"")
+
+                val extras = Bundle()
+                extras.putInt(SHOW_LOADING,1)//为了实现点击即可刷新
+                if(isCurrentActivated()) Utils.sendWidgetUpdate(this@WeatherService, WeatherWidget::class.java, extras)
+                if(isForecastActivated()) Utils.sendWidgetUpdate(this@WeatherService, WeatherForecastWidget::class.java, extras)
+
                 getCurrentLocWeather()
 
             }
         }
     }
 
+
     //@RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     private fun getCurrentLocWeather() {
-
-       getWeather(lat,lon)
+        mLocationClient!!.setLocOption(mOption)
+        mLocationClient!!.registerLocationListener(myListener)  //每次都要注册，否则stop之后就会失效
+        mLocationClient!!.start()
 
     }
 
@@ -182,10 +228,14 @@ class WeatherService : Service() {
 
                             extras.putString(EXTRA_TEMP, "${formatted}°${if (useCelsius) "C" else "F"}")
 
-                            //extras.putString(EXTRA_LOC, " ")
+                            extras.putString(EXTRA_LOC, loc)
                             extras.putString(EXTRA_DESC, capitalize(model.weather[0].description))
                             //extras.putString(EXTRA_TIME, time)
                             extras.putString(EXTRA_ICON, Utils.parseWeatherIconCode(model.weather[0].id, model.weather[0].icon))
+
+                            extras.putInt(SHOW_LOADING,0)
+                            extras.putBoolean(IF_EDIT_LOC,ifEditLoc)
+                            extras.putString(EDIT_LOC,editLoc)
 
                             Utils.sendWidgetUpdate(this@WeatherService, WeatherWidget::class.java, extras)
 
@@ -231,6 +281,7 @@ class WeatherService : Service() {
                         extras.putStringArrayList(EXTRA_TIME, times)
                         extras.putStringArrayList(EXTRA_ICON, icons)
                         extras.putBoolean(WEATHER_SHOW_TIME, weatherShowTime)
+                        extras.putInt(SHOW_LOADING,0)
 
                         Utils.sendWidgetUpdate(this@WeatherService, WeatherForecastWidget::class.java, extras)
                     }
@@ -471,5 +522,7 @@ class WeatherService : Service() {
     }
 
 
-    class Loc(var lat: Double, var lon: Double)
+
+
+
 }

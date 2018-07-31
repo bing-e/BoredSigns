@@ -15,15 +15,17 @@
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="12px"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="6dp"
         android:layout_toRightOf="@id/icon"
-        android:gravity="center_vertical"
         android:text="晴"
         android:textAlignment="center"
         android:textColor="#fff"
-        android:textSize="75px" />
+        android:textSize="64px" />
+
+
 
     <ProgressBar
         android:id="@+id/loading"
@@ -41,14 +43,35 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="false"
-        android:layout_marginTop="7px"
+        android:layout_marginLeft="1dp"
         android:layout_marginRight="30dp"
-        android:layout_toRightOf="@+id/title"
+        android:layout_toRightOf="@+id/loc"
         android:gravity="right|center_vertical"
         android:text="30° C"
         android:textAllCaps="false"
         android:textColor="#fff"
         android:textSize="80px"
-        android:textStyle="italic" />
+
+        />
+
+    <TextView
+        android:id="@+id/loc"
+        android:layout_width="500px"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/icon"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:freezesText="true"
+        android:gravity="top"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:paddingLeft="5dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="东长安街，东城区"
+        android:textColor="#fff"
+        android:textSize="30px" />
 
 </RelativeLayout>

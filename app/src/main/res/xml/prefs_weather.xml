@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:title="@string/basic_setting">
 
@@ -8,12 +9,31 @@
             android:key="weather_unit"
             android:title="@string/use_celsius" />
         <SwitchPreference
+            android:clickable="false"
+            android:contextClickable="true"
             android:defaultValue="true"
+            android:editable="false"
             android:key="use_location"
-            android:title="@string/use_current_location" />
+            android:title="@string/use_current_location"
+            android:visibility="invisible" />
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/weather_widget_title">
+
+        <SwitchPreference
+            android:id="@+id/ifEditLoc"
+            android:defaultValue="false"
+            android:key="ifEditLoc"
+            android:title="@string/ifEditLoc" />
+        <EditTextPreference
+            android:id="@+id/editLoc"
+            android:defaultValue="银河系"
+            android:key="editLoc"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/editLoc" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/weather_forecast_widget_title">
 
         <SwitchPreference
@@ -33,10 +53,17 @@
             android:title="@string/weatherNum" />
     </PreferenceCategory>
 
-    <Preference android:summary="@string/weather_icon_attr">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:data="http://erikflowers.github.io/weather-icons/" />
-    </Preference>
+
+
+    <PreferenceCategory android:title="关于">
+        <Preference android:summary="@string/weather_icon_attr">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://erikflowers.github.io/weather-icons/" />
+        </Preference>
+        <Preference android:summary="天气V1.2B">
+
+        </Preference>
+    </PreferenceCategory>
 
 </PreferenceScreen>

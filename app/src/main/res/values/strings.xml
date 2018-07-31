@@ -6,8 +6,8 @@
     <!--Widget Titles-->
     <string name="info_widget_title">状态栏</string>
     <string name="image_widget_title">图片</string>
-    <string name="weather_widget_title">天气</string>
-    <string name="weather_forecast_widget_title">天气预报</string>
+    <string name="weather_widget_title">当前天气</string>
+    <string name="weather_forecast_widget_title">未来天气预报</string>
     <string name="navbar_widget_title">虚拟导航栏</string>
     <string name="dev_widget_1_title">帧率、内存、充电效率</string>
     <string name="dev_widget_2_title">处理器、电池温度</string>
@@ -42,7 +42,7 @@
     <string name="edit_screen_on">亮屏显示设置</string>
     <string name="edit_aod">息屏显示设置</string>
     <string name="use_celsius">使用摄氏度</string>
-    <string name="use_current_location">使用当前位置</string>
+    <string name="use_current_location">使用WIFI、基站自动定位</string>
     <string name="pick_location">手动选择位置</string>
     <string name="edit_layout">自定义布局</string>
     <string name="show_icon">显示图标</string>
@@ -90,6 +90,8 @@
     <string name="weatherNum">时段数量</string>
     <string name="weather_show_time">显示每时段时间</string>
     <string name="basic_setting">基本设置</string>
+    <string name="editLoc">编辑定位内容</string>
+    <string name="ifEditLoc">自定义定位内容</string>
 
 
 </resources>
