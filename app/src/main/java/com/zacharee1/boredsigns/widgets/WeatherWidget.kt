@@ -79,6 +79,11 @@ class  WeatherWidget : AppWidgetProvider() {
     private fun openLoading(views: RemoteViews,appWidgetManager: AppWidgetManager,  appWidgetIds: IntArray){
         views.setViewVisibility(R.id.loading, View.VISIBLE)
         appWidgetManager.updateAppWidget(appWidgetIds, views)
+        val handler = Handler()
+        handler.postDelayed({
+            closeLoading(views, appWidgetManager, appWidgetIds)
+        },10000) //错误处理：10秒后都要去掉
+
 
     }
     private fun closeLoading(views: RemoteViews,appWidgetManager: AppWidgetManager,  appWidgetIds: IntArray){

@@ -101,12 +101,12 @@ class WeatherService : Service() {
 
              lat = location.latitude    //获取纬度信息
              lon = location.longitude    //获取经度信息
-            val radius = location.radius    //获取定位精度，默认值为0.0f
+            //val radius = location.radius    //获取定位精度，默认值为0.0f
 
-            val coorType = location.coorType
+            //val coorType = location.coorType
             //获取经纬度坐标类型，以LocationClientOption中设置过的坐标类型为准
 
-            val errorCode = location.locType
+            //val errorCode = location.locType
             //获取定位类型、定位错误返回码，具体信息可参照类参考中BDLocation类中的说明
             loc = location.street + ", " +location.district
 

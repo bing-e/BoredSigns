@@ -61,7 +61,7 @@
                 android:action="android.intent.action.VIEW"
                 android:data="http://erikflowers.github.io/weather-icons/" />
         </Preference>
-        <Preference android:summary="天气V1.2B">
+        <Preference android:summary="天气V0.2@Binge">
 
         </Preference>
     </PreferenceCategory>

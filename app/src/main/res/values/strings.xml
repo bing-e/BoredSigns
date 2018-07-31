@@ -81,10 +81,10 @@
     <string name="unable_to_parse_cpu_info">CPU获取失败</string>
 
     <!--Menu-->
-    <string name="play">谷歌商店 (v31b)</string>
-    <string name="zacharee1">开发 @Zacharee1</string>
-    <string name="binge">汉化优化 @Binge</string>
-    <string name="gfan">发布 @机锋论坛</string>
+    <string name="play">谷歌商店</string>
+    <string name="zacharee1">原版Ver31@Zacharee1</string>
+    <string name="binge">汉化优化版Ver31_1.3@Binge</string>
+    <string name="gfan">发布@机锋论坛</string>
 
     <!--Weather-->
     <string name="weatherNum">时段数量</string>

@@ -12,15 +12,31 @@
         <SwitchPreference
             android:title="@string/show_ampm"
             android:key="am_pm"
-            android:defaultValue="true" />
+            android:defaultValue="false"/>
 
         <SwitchPreference
             android:title="@string/hour_24"
-            android:key="24_hour" />
+            android:key="24_hour"
+            android:defaultValue="true"
+            />
 
         <SwitchPreference
             android:title="@string/show_date"
-            android:key="show_date" />
+            android:key="show_date"
+            android:defaultValue="true"/>
+
+        <SwitchPreference
+            android:title="@string/month"
+            android:key="show_month"
+            android:defaultValue="false"/>
+        <SwitchPreference
+            android:title="@string/day"
+            android:key="show_day"
+            android:defaultValue="true"/>
+        <SwitchPreference
+            android:title="@string/week"
+            android:key="show_week"
+            android:defaultValue="true"/>
 
         <com.jaredrummler.android.colorpicker.ColorPreference
             android:title="@string/color_title"
@@ -39,8 +55,8 @@
 
         <SwitchPreference
             android:title="@string/show_percent"
-            android:defaultValue="true"
-            android:key="show_percent" />
+            android:key="show_percent"
+            android:defaultValue="false"/>
 
         <SwitchPreference
             android:defaultValue="true"

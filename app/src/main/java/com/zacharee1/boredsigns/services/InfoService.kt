@@ -37,6 +37,9 @@ class InfoService : NotificationListenerService() {
                 "am_pm",
                 "24_hour",
                 "clock_color",
+                "show_month",
+                "show_day",
+                "show_week",
                 "show_date",
                 "show_battery",
                 "show_clock",
@@ -71,6 +74,7 @@ class InfoService : NotificationListenerService() {
         if (KEYS.contains(s) && shouldAct()) {
             sendUpdateBroadcast(null)
         }
+
     }
 
     private var mReceiver: BroadcastReceiver = object : BroadcastReceiver() {
@@ -175,5 +179,7 @@ class InfoService : NotificationListenerService() {
         }
 
         Utils.sendWidgetUpdate(this, InfoWidget::class.java, update)
+
+
     }
 }

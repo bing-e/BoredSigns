@@ -146,13 +146,13 @@ class InfoWidget : AppWidgetProvider() {
 
         var show = true
         var color = Color.WHITE
-        var showPercent = true
+        var showPercent = false
         var showIcon = true
 
         mPrefs?.let {
             show = it.getBoolean("show_battery", true)
             color = it.getInt("battery_color", Color.WHITE)
-            showPercent = it.getBoolean("show_percent", true)
+            showPercent = it.getBoolean("show_percent", false)
             showIcon = it.getBoolean("show_batt_icon", true)
         }
 
@@ -183,24 +183,42 @@ class InfoWidget : AppWidgetProvider() {
 
     private fun updateClock(views: RemoteViews) {
         var show = true
-        var hour_24 = false
-        var amPm = true
-        var showDate = false
+        var hour_24 = true
+        var amPm = false
+        var showDate = true
         var color = Color.WHITE
+
+        var showMonth = false
+        var showDay = true
+        var showWeek = true
 
         mPrefs?.let {
             show = it.getBoolean("show_clock", true)
-            hour_24 = it.getBoolean("24_hour", false)
-            amPm = it.getBoolean("am_pm", true)
-            showDate = it.getBoolean("show_date", false)
+            hour_24 = it.getBoolean("24_hour", true)
+            amPm = it.getBoolean("am_pm", false)
+            showDate = it.getBoolean("show_date", true)
             color = it.getInt("clock_color", Color.WHITE)
+
+            showMonth = it.getBoolean("show_month",false)
+            showDay = it.getBoolean("show_day",true)
+            showWeek = it.getBoolean("show_week",true)
+
         }
 
         if (show) {
             views.setViewVisibility(R.id.clock, View.VISIBLE)
+            var format : String = ""
+            if (showDate){
+                if(showMonth)format += "MM月"
+                if(showDay)format += "d日 "
+                if(showWeek)format +="EE "
+            }
+            if (hour_24)format+="k"
+            else format+="h"
+            format+=":mm"
+            if (amPm)format+=" a"
 
-            val format: CharSequence = if (showDate) "EE, d " else {""} +  if (hour_24) "k" else {"h"} + ":mm" + if (amPm) " a" else {""}
-
+            //val format: CharSequence = if (showDate){ "EE, d "} else {""} +  if (hour_24) "k" else {"h"} + ":mm" + if (amPm) " a" else {""}
             views.setCharSequence(R.id.textClock, "setFormat12Hour", format)
             views.setCharSequence(R.id.textClock, "setFormat24Hour", format)
 
