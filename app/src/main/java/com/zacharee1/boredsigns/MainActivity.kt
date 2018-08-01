@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.binge -> {
-                intent.data = Uri.parse("http://binge.bingestech.com")
+                intent.data = Uri.parse("http://binge-v20.bingestech.com")
             }
             R.id.gfan -> {
                 intent.data = Uri.parse("http://gfan-v20.bingestech.com")
