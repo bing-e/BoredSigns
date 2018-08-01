@@ -69,7 +69,7 @@ class WeatherService : Service() {
 
         var numToGet = "6"
     }
-    private var lat: Double = 20.0
+    private var lat: Double = 22.0
     private var lon: Double = 110.0
     private var weatherShowTime: Boolean = true
     private var useCelsius: Boolean = true
@@ -100,14 +100,17 @@ class WeatherService : Service() {
             //val coorType = location.coorType
             //获取经纬度坐标类型，以LocationClientOption中设置过的坐标类型为准
 
-            //val errorCode = location.locType
+            val errorCode = location.locType
             //获取定位类型、定位错误返回码，具体信息可参照类参考中BDLocation类中的说明
 
             val loca = location.street + ", " +location.district
 
-            if (latitude < 0 || longitude < 0){
-                getWeather(lat,lon)
+            if (latitude < 1 || longitude < 1){
+               // loc = errorCode.toString()
+               // getWeather(lat,lon)
+                return //没拿到数据直接返回，依靠挂件自动取消加载
             }else{
+
                 lat = latitude
                 lon = longitude
                 loc = loca

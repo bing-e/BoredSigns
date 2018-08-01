@@ -81,7 +81,7 @@ class  WeatherWidget : AppWidgetProvider() {
         val handler = Handler()
         handler.postDelayed({
             closeLoading(views, appWidgetManager, appWidgetIds)
-        },10000) //错误处理：10秒后都要去掉
+        },5000) //错误处理：5秒后都要去掉
 
 
     }
