@@ -1,24 +1,25 @@
 package com.zacharee1.boredsigns.services
 
-import android.app.AlarmManager
+
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.hardware.Sensor
-import android.hardware.SensorManager
 import android.os.BatteryManager
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.util.Log
-import android.view.Choreographer
 import com.zacharee1.boredsigns.util.Utils
 import com.zacharee1.boredsigns.widgets.Dev2Widget
 import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.InputStreamReader
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.*
+import android.support.v4.app.NotificationCompat
+import com.zacharee1.boredsigns.R
 
 class Dev2Service : Service() {
     companion object {
@@ -34,6 +35,7 @@ class Dev2Service : Service() {
     }
 
     override fun onCreate() {
+        startForeground()
         isRunning = true
         startListening()
         super.onCreate()
@@ -41,8 +43,20 @@ class Dev2Service : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-
+        stopForeground(true)
         isRunning = false
+    }
+    private fun startForeground() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(NotificationChannel("dev2",
+                    resources.getString(R.string.dev_widget_2_title), NotificationManager.IMPORTANCE_LOW))
+        }
+        startForeground(1337,
+                NotificationCompat.Builder(this, "dev2")
+                        .setSmallIcon(R.mipmap.ic_launcher_boredsigns)
+                        .setPriority(NotificationCompat.PRIORITY_MIN)
+                        .build())
     }
 
     private fun startListening() {

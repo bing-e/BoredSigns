@@ -7,30 +7,27 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
-import android.os.Build
 import android.provider.Settings
+import android.support.v4.content.ContextCompat
 import android.widget.RemoteViews
 import android.widget.Toast
 import com.zacharee1.boredsigns.R
 import com.zacharee1.boredsigns.services.VolumeService
 
+
 class RingerVolumeWidget : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(Intent(context, VolumeService::class.java))
-        } else {
-            context.startService(Intent(context, VolumeService::class.java))
-        }
+        ContextCompat.startForegroundService(context, Intent(context, VolumeService::class.java))
 
-        /*
+
         val notifMan = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (!notifMan.isNotificationPolicyAccessGranted) {
             context.startActivity(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
             Toast.makeText(context, context.resources.getText(R.string.grant_notification_access), Toast.LENGTH_SHORT).show()
             return
         }
-        */
+
         val views = RemoteViews(context.packageName, R.layout.volume_widget_layout)
         val audioMan = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val currentVol = audioMan.getStreamVolume(AudioManager.STREAM_RING)

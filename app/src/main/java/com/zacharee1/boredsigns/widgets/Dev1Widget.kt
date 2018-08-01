@@ -9,11 +9,12 @@ import android.widget.RemoteViews
 
 import com.zacharee1.boredsigns.R
 import com.zacharee1.boredsigns.services.Dev1Service
-import com.zacharee1.boredsigns.util.Utils
+
+import android.support.v4.content.ContextCompat
 
 class Dev1Widget : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
-        context.startService(Intent(context, Dev1Service::class.java))
+        ContextCompat.startForegroundService(context, Intent(context, Dev1Service::class.java))
 
         val views = RemoteViews(context.packageName, R.layout.dev1_widget)
         views.setTextViewText(R.id.fps, Dev1Service.FPS.toString())

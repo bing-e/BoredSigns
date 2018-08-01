@@ -251,7 +251,12 @@ object Utils {
             cpuLast = split
             cpuLastSum = sum
 
-            ret.add("$percent% Load")
+            if (percent<10){
+                ret.add("0$percent% Load")
+            }else{
+                ret.add("$percent% Load")
+            }
+
 
             for (i in 0 until Runtime.getRuntime().availableProcessors()) {
                 val freqProc = Runtime.getRuntime().exec("cat /sys/devices/system/cpu/cpu$i/cpufreq/scaling_cur_freq")

@@ -1,6 +1,6 @@
 package com.zacharee1.boredsigns.services
 
-import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.BroadcastReceiver
@@ -10,10 +10,13 @@ import android.content.IntentFilter
 import android.database.ContentObserver
 import android.media.AudioManager
 import android.net.Uri
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.provider.Settings
+import android.support.v4.app.NotificationCompat
+import com.zacharee1.boredsigns.R
 import com.zacharee1.boredsigns.util.Utils
 import com.zacharee1.boredsigns.widgets.MediaVolumeWidget
 import com.zacharee1.boredsigns.widgets.RingerVolumeWidget
@@ -79,19 +82,21 @@ class VolumeService : Service() {
     }
 
     override fun onCreate() {
+        super.onCreate()
+        startForeground()
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         contentResolver.registerContentObserver(Settings.System.CONTENT_URI, true, systemObserver)
         contentResolver.registerContentObserver(Settings.Global.CONTENT_URI, true, systemObserver)
 
-       // Settings.System.VOLUME_VOICE
+        //Settings.System.VOLUME_VOICE
 
         registerReceiver(receiver, FILTER)
-        super.onCreate()
-        startForeground(2, Notification())
+
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        stopForeground(true)
 
 
         try {
@@ -99,7 +104,20 @@ class VolumeService : Service() {
         } catch (e: Exception) {}
 
         contentResolver.unregisterContentObserver(systemObserver)
-        stopForeground(true)
+
+    }
+
+    private fun startForeground() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(NotificationChannel("volume",
+                    resources.getString(R.string.ringer_widget_title), NotificationManager.IMPORTANCE_LOW))
+        }
+        startForeground(1337,
+                NotificationCompat.Builder(this, "volume")
+                        .setSmallIcon(R.mipmap.ic_launcher_boredsigns)
+                        .setPriority(NotificationCompat.PRIORITY_MIN)
+                        .build())
     }
 
     private fun turnUpRinger() {

@@ -3,23 +3,17 @@ package com.zacharee1.boredsigns.services
 import android.Manifest
 //import android.annotation.RequiresPermission
 import android.annotation.SuppressLint
-import android.app.AlarmManager
-import android.app.Notification
-import android.app.PendingIntent
-import android.app.Service
+import android.app.*
+
 import android.content.*
-import android.content.pm.PackageManager
-//import android.location.Geocoder
-//import android.location.Location
-//import android.location.LocationListener
-//import android.location.LocationManager
-import android.location.LocationManager.NETWORK_PROVIDER
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.os.SystemClock
 import android.preference.PreferenceManager
 import android.support.annotation.RequiresPermission
 import android.support.v4.content.LocalBroadcastManager
+import android.support.v4.app.NotificationCompat
 import android.widget.Toast
 
 import com.baidu.location.BDAbstractLocationListener
@@ -79,7 +73,7 @@ class WeatherService : Service() {
     private var lon: Double = 110.0
     private var weatherShowTime: Boolean = true
     private var useCelsius: Boolean = true
-    private var loc: String = ""
+    private var loc: String = "定位失败了，请试试重新打开天气挂件"
     private var ifEditLoc: Boolean = false
     private var editLoc: String = ""
     private lateinit var prefs: SharedPreferences
@@ -99,8 +93,8 @@ class WeatherService : Service() {
             //以下只列举部分获取经纬度相关（常用）的结果信息
             //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
 
-             lat = location.latitude    //获取纬度信息
-             lon = location.longitude    //获取经度信息
+             val latitude = location.latitude    //获取纬度信息
+             val longitude = location.longitude    //获取经度信息
             //val radius = location.radius    //获取定位精度，默认值为0.0f
 
             //val coorType = location.coorType
@@ -108,11 +102,17 @@ class WeatherService : Service() {
 
             //val errorCode = location.locType
             //获取定位类型、定位错误返回码，具体信息可参照类参考中BDLocation类中的说明
-            loc = location.street + ", " +location.district
 
-            if (lat < 0 || lon < 0 )return
+            val loca = location.street + ", " +location.district
 
-            getWeather(lat,lon)
+            if (latitude < 0 || longitude < 0){
+                getWeather(lat,lon)
+            }else{
+                lat = latitude
+                lon = longitude
+                loc = loca
+                getWeather(lat,lon)
+            }
             mLocationClient!!.stop()
         }
     }
@@ -135,7 +135,7 @@ class WeatherService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        startForeground(1, Notification())
+        startForeground()
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
         alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -180,6 +180,20 @@ class WeatherService : Service() {
 
         stopForeground(true)// 停止前台服务--参数：表示是否移除之前的通知
     }
+
+    private fun startForeground() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(NotificationChannel("weather",
+                    resources.getString(R.string.weather_widget_title), NotificationManager.IMPORTANCE_LOW))
+        }
+        startForeground(1337,
+                NotificationCompat.Builder(this, "weather")
+                        .setSmallIcon(R.mipmap.ic_launcher_boredsigns)
+                        .setPriority(NotificationCompat.PRIORITY_MIN)
+                        .build())
+    }
+
 
 
     private fun onHandleIntent(action: String?) {
