@@ -1,6 +1,8 @@
 # BoredSigns 辅屏工具栏 汉化优化版
 LG V20/V10 专用
+
 遵循 GPL-3.0
+
 详细介绍: [BoredSigns辅屏副屏工具栏 汉化优化v1.4 免root/状态栏/天气/导航栏](http://bbs.gfan.com/android-9361541-1-1.html)
 
 # BoredSigns
