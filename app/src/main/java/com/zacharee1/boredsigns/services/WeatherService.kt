@@ -69,11 +69,11 @@ class WeatherService : Service() {
 
         var numToGet = "6"
     }
-    private var lat: Double = 22.0
-    private var lon: Double = 110.0
+    private var lat: Double = -1.0
+    private var lon: Double = -1.0
     private var weatherShowTime: Boolean = true
     private var useCelsius: Boolean = true
-    private var loc: String = "定位失败了，请试试重新打开天气挂件"
+    private var loc: String = " "
     private var ifEditLoc: Boolean = false
     private var editLoc: String = ""
     private lateinit var prefs: SharedPreferences
@@ -106,14 +106,13 @@ class WeatherService : Service() {
             val loca = location.street + ", " +location.district
 
             if (latitude < 1 || longitude < 1){
-               // loc = errorCode.toString()
-               // getWeather(lat,lon)
-                return //没拿到数据直接返回，依靠挂件自动取消加载
+                if (lat < 0 || lon < 0) return //首次没拿到数据应该直接返回，依靠挂件自动取消加载
+                getWeather(lat,lon) //之后没拿到使用上一次的数据
             }else{
 
                 lat = latitude
                 lon = longitude
-                loc = loca
+                if (loca !="null, null")loc = loca
                 getWeather(lat,lon)
             }
             mLocationClient!!.stop()

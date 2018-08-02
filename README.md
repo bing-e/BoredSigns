@@ -1,3 +1,8 @@
+# BoredSigns 辅屏工具栏 汉化优化版
+LG V20/V10 专用
+遵循 GPL-3.0
+详细介绍: [BoredSigns辅屏副屏工具栏 汉化优化v1.4 免root/状态栏/天气/导航栏](http://bbs.gfan.com/android-9361541-1-1.html)
+
 # BoredSigns
 BoredSigns is an app for the LG V20 and V10, which aims to add further functionality to the second screen, in the form of extra widgets.
 It won't and can't work on any other devices.
@@ -30,3 +35,5 @@ There is also a class that is not uploaded to GitHub. This class is merely used 
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
